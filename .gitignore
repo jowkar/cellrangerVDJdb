@@ -1,4 +1,7 @@
 # History files
+loading_commands
+old
+*.Rproj
 .Rhistory
 .Rapp.history
 
