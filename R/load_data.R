@@ -1,6 +1,6 @@
 library(stringr)
 
-read_load_data_template <- function(fname = "inst/load_data_template.sql"){
+read_load_data_template <- function(fname = "inst/sql/load_data_template.sql"){
   load_data_template <- readLines(fname, warn = F)
   names(load_data_template) <- str_split_fixed(
     str_split_fixed(load_data_template," ",3)[,2],"\\(",2)[,1]
@@ -44,8 +44,10 @@ write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure,
   load_data_sql <- create_load_data_sql(load_data_template, sname, dir)
   
   dir.create(outdir, showWarnings = F, recursive = T)
-  writeLines(load_data_sql, con = paste0(outdir, "/", sname, "_load_data.sql"), 
+  loading_command_file <- paste0(outdir, "/", sname, "_load_data.sql")
+  writeLines(load_data_sql, con = loading_command_file, 
              sep = "\n")
+  return(loading_command_file)
 }
 
 load_data_to_db <- function(loading_command_files, dbname, user, password, 
@@ -53,7 +55,21 @@ load_data_to_db <- function(loading_command_files, dbname, user, password,
   for (loading_command_file in loading_command_files){
     command <- paste0("PGPASSWORD=", password, " ", psql_path, " -U ", user, 
                       " -d ", dbname, " < ", loading_command_file)
-    print(command)
     system(command)
   }
+}
+
+load_from_cellranger_vdj_t <- function(sname, 
+                                       resultsdir, 
+                                       cellranger_dir_structure, 
+                                       outdir = "loading_commands",
+                                       dbname, 
+                                       user, 
+                                       password, 
+                                       psql_path = "/Library/PostgreSQL/15/bin/psql"){
+  
+  loading_command_file <- write_load_data_script(sname, resultsdir, 
+                                                 cellranger_dir_structure, 
+                                                 outdir)
+  load_data_to_db(loading_command_file, dbname, user, password, psql_path)
 }
