@@ -1,6 +1,6 @@
 library(stringr)
 
-read_load_data_template <- function(fname = "load_data_template.sql"){
+read_load_data_template <- function(fname = "inst/load_data_template.sql"){
   load_data_template <- readLines(fname, warn = F)
   names(load_data_template) <- str_split_fixed(
     str_split_fixed(load_data_template," ",3)[,2],"\\(",2)[,1]
@@ -48,19 +48,12 @@ write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure,
              sep = "\n")
 }
 
-snames <- basename(list.dirs("/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/multi",recursive = F))
-# write_load_data_script(
-#     sname = "SampleID_9_11june18",
-#     resultsdir = "/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/",
-#     cellranger_dir_structure = paste0("multi/", "__s__",
-#                                      "/outs/per_sample_outs/", "__s__",
-#                                      "/vdj_t/"))
-
-for (sname in snames){
-  write_load_data_script(
-    sname = sname,
-    resultsdir = "/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/",
-    cellranger_dir_structure = paste0("multi/", "__s__",
-                                      "/outs/per_sample_outs/", "__s__",
-                                      "/vdj_t/"))
+load_data_to_db <- function(loading_command_files, dbname, user, password, 
+                            psql_path = "/Library/PostgreSQL/15/bin/psql"){
+  for (loading_command_file in loading_command_files){
+    command <- paste0("PGPASSWORD=", password, " ", psql_path, " -U ", user, 
+                      " -d ", dbname, " < ", loading_command_file)
+    print(command)
+    system(command)
+  }
 }
