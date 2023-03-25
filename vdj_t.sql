@@ -31,22 +31,25 @@ CREATE TABLE "airr_rearrangement" (
   "c_sequence_end" int,
   "consensus_count" int,
   "duplicate_count" int,
-  "is_cell" varchar(1)
+  "is_cell" varchar(1),
+  "sample_id" varchar
 );
 
 CREATE TABLE "clonotypes" (
-  "clonotype_id" varchar PRIMARY KEY,
+  "clonotype_id" varchar,
   "frequency" int,
   "proportion" float,
   "cdr3s_aa" varchar,
   "cdr3s_nt" varchar,
   "inkt_evidence" varchar,
-  "mait_evidence" varchar
+  "mait_evidence" varchar,
+  "sample_id" varchar,
+  PRIMARY KEY ("clonotype_id", "sample_id")
 );
 
 CREATE TABLE "consensus_annotations" (
   "clonotype_id" varchar,
-  "consensus_id" varchar PRIMARY KEY,
+  "consensus_id" varchar,
   "length" int,
   "chain" varchar,
   "v_gene" varchar,
@@ -90,7 +93,9 @@ CREATE TABLE "consensus_annotations" (
   "cdr3_start" int,
   "cdr3_end" int,
   "fwr4_start" int,
-  "fwr4_end" int
+  "fwr4_end" int,
+  "sample_id" varchar,
+  PRIMARY KEY ("consensus_id", "sample_id")
 );
 
 CREATE TABLE "filtered_contig_annotations" (
@@ -125,19 +130,22 @@ CREATE TABLE "filtered_contig_annotations" (
   "umis" int,
   "raw_clonotype_id" varchar,
   "raw_consensus_id" varchar,
-  "exact_subclonotype_id" int
+  "exact_subclonotype_id" int,
+  "sample_id" varchar
 );
 
 CREATE TABLE "barcodes" (
-  "barcode_id" varchar PRIMARY KEY
+  "barcode_id" varchar,
+  "sample_id" varchar,
+  PRIMARY KEY ("barcode_id", "sample_id")
 );
 
-ALTER TABLE "consensus_annotations" ADD FOREIGN KEY ("clonotype_id") REFERENCES "clonotypes" ("clonotype_id");
+ALTER TABLE "consensus_annotations" ADD FOREIGN KEY ("clonotype_id", "sample_id") REFERENCES "clonotypes" ("clonotype_id", "sample_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "airr_rearrangement" ADD FOREIGN KEY ("clone_id") REFERENCES "clonotypes" ("clonotype_id");
+ALTER TABLE "airr_rearrangement" ADD FOREIGN KEY ("clone_id", "sample_id") REFERENCES "clonotypes" ("clonotype_id", "sample_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "filtered_contig_annotations" ADD FOREIGN KEY ("raw_clonotype_id") REFERENCES "clonotypes" ("clonotype_id");
+ALTER TABLE "filtered_contig_annotations" ADD FOREIGN KEY ("raw_clonotype_id", "sample_id") REFERENCES "clonotypes" ("clonotype_id", "sample_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "airr_rearrangement" ADD FOREIGN KEY ("cell_id") REFERENCES "barcodes" ("barcode_id");
+ALTER TABLE "airr_rearrangement" ADD FOREIGN KEY ("cell_id", "sample_id") REFERENCES "barcodes" ("barcode_id", "sample_id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "filtered_contig_annotations" ADD FOREIGN KEY ("barcode") REFERENCES "barcodes" ("barcode_id");
+ALTER TABLE "filtered_contig_annotations" ADD FOREIGN KEY ("barcode", "sample_id") REFERENCES "barcodes" ("barcode_id", "sample_id") ON DELETE CASCADE ON UPDATE CASCADE;

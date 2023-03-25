@@ -1,4 +1,5 @@
 # History files
+.DS_Store
 loading_commands
 old
 *.Rproj

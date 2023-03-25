@@ -28,12 +28,25 @@ con = dbConnect(RPostgres::Postgres(),
 con
 dbListTables(con)
 
-result <- dbSendQuery(con, "SELECT * FROM airr_rearrangement LIMIT 10")
-data <- dbFetch(result, n = -1)
-dbClearResult(result)
+# Load data
+fnames <- Sys.glob("/Users/00105606/proj/cellranger_vdj_db/loading_commands/*.sql")
+#loading_command_file <- "/Users/00105606/proj/cellranger_vdj_db/loading_commands/SampleID_9_11june18_load_data.sql"
+for (loading_command_file in fnames){
+  command <- paste0("PGPASSWORD=",password," /Library/PostgreSQL/15/bin/psql -U ",user," -d ",dbname," < ",loading_command_file)
+  print(command)
+  system(command)
+}
 
-result2 <- dbSendQuery(con, "SELECT clone_id,sequence FROM airr_rearrangement LIMIT 10")
-data <- dbFetch(result2, n = -1)
-dbClearResult(result2)
+# Query data
+query <- function(con,sql){
+  result <- dbSendQuery(con, sql)
+  data <- dbFetch(result, n = -1)
+  dbClearResult(result)
+  return(data)  
+}
+
+query(con, "SELECT DISTINCT sample_id FROM airr_rearrangement")
+
+
 
 dbDisconnect(con)

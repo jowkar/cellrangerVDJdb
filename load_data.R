@@ -26,6 +26,7 @@ create_load_data_sql <- function(load_data_template, sname, dir){
     load_data_template[[tabname]] <- gsub(paste0("file_",tabname),
                                           fnames[[tabname]],
                                           load_data_template[[tabname]])
+    load_data_template[[tabname]] <- gsub("__s__",sname,load_data_template[[tabname]])
   }
   return(load_data_template)
 }
@@ -47,9 +48,19 @@ write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure,
              sep = "\n")
 }
 
-write_load_data_script(
-    sname = "SampleID_9_11june18",
+snames <- basename(list.dirs("/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/multi",recursive = F))
+# write_load_data_script(
+#     sname = "SampleID_9_11june18",
+#     resultsdir = "/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/",
+#     cellranger_dir_structure = paste0("multi/", "__s__",
+#                                      "/outs/per_sample_outs/", "__s__",
+#                                      "/vdj_t/"))
+
+for (sname in snames){
+  write_load_data_script(
+    sname = sname,
     resultsdir = "/Users/00105606/nimbus/data/proj/um_ss/Pipelines/10x/results/",
     cellranger_dir_structure = paste0("multi/", "__s__",
-                                     "/outs/per_sample_outs/", "__s__",
-                                     "/vdj_t/"))
+                                      "/outs/per_sample_outs/", "__s__",
+                                      "/vdj_t/"))
+}
