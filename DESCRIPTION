@@ -1,11 +1,11 @@
-Package: cellranger_vdj_db
+Package: cellrangerVDJdb
 Type: Package
-Title: cellranger_vdj_db
+Title: cellrangerVDJdb
 Version: 0.1
 Author: Joakim Karlsson
 Maintainer: Joakim Karlsson <joakim.karlsson@perkings.org.au>
 Description: Database and R interface to load and query assembled VDJ sequences from CellRanger.
-License: GPLv3
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: false
 StagedInstall: no

@@ -1,13 +1,11 @@
-library(stringr)
-
-read_load_data_template <- function(fname = "inst/sql/load_data_template.sql"){
+.read_load_data_template <- function(fname = "inst/sql/load_data_template.sql"){
   load_data_template <- readLines(fname, warn = F)
-  names(load_data_template) <- str_split_fixed(
-    str_split_fixed(load_data_template," ",3)[,2],"\\(",2)[,1]
+  names(load_data_template) <- stringr::str_split_fixed(
+    stringr::str_split_fixed(load_data_template," ",3)[,2],"\\(",2)[,1]
   return(load_data_template)
 }
 
-create_load_data_sql <- function(load_data_template, sname, dir){
+.create_load_data_sql <- function(load_data_template, sname, dir){
   stopifnot(dir.exists(dir))
   fnames <- list()
   fnames[["barcodes"]] <- paste0(dir,"cell_barcodes.json")
@@ -31,7 +29,7 @@ create_load_data_sql <- function(load_data_template, sname, dir){
   return(load_data_template)
 }
 
-write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure, 
+.write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure, 
                                    outdir = "loading_commands"){
   cellranger_dir_structure <- gsub("__s__", sname, cellranger_dir_structure)
  
@@ -40,8 +38,8 @@ write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure,
     stop("Input directory does not exist")
   }
   
-  load_data_template <- read_load_data_template()
-  load_data_sql <- create_load_data_sql(load_data_template, sname, dir)
+  load_data_template <- .read_load_data_template()
+  load_data_sql <- .create_load_data_sql(load_data_template, sname, dir)
   
   dir.create(outdir, showWarnings = F, recursive = T)
   loading_command_file <- paste0(outdir, "/", sname, "_load_data.sql")
@@ -50,7 +48,7 @@ write_load_data_script <- function(sname, resultsdir, cellranger_dir_structure,
   return(loading_command_file)
 }
 
-load_data_to_db <- function(loading_command_files, dbname, user, password, 
+.load_data_to_db <- function(loading_command_files, dbname, user, password, 
                             psql_path = "/Library/PostgreSQL/15/bin/psql"){
   for (loading_command_file in loading_command_files){
     command <- paste0("PGPASSWORD=", password, " ", psql_path, " -U ", user, 
@@ -59,6 +57,7 @@ load_data_to_db <- function(loading_command_files, dbname, user, password,
   }
 }
 
+#' @export
 load_from_cellranger_vdj_t <- function(sname, 
                                        resultsdir, 
                                        cellranger_dir_structure, 
@@ -68,8 +67,8 @@ load_from_cellranger_vdj_t <- function(sname,
                                        password, 
                                        psql_path = "/Library/PostgreSQL/15/bin/psql"){
   
-  loading_command_file <- write_load_data_script(sname, resultsdir, 
+  loading_command_file <- .write_load_data_script(sname, resultsdir, 
                                                  cellranger_dir_structure, 
                                                  outdir)
-  load_data_to_db(loading_command_file, dbname, user, password, psql_path)
+  .load_data_to_db(loading_command_file, dbname, user, password, psql_path)
 }

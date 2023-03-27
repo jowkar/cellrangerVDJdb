@@ -1,2 +1,4 @@
+testing.sql
+testing.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
