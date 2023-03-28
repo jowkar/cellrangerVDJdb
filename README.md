@@ -11,14 +11,9 @@ An ER diagram describing the created database structure can be found here: [ER d
 
 # Usage
 
-It is a requirement that PostgreSQL is already setup and running and that an empty database has been setup. 
+It is a requirement that PostgreSQL is already setup and running. 
 
-First, run the vdj_t.sql script to setup all tables (in bash terminal; modify according to user settings. "vdj_t" is the name of the empty database expected to be created in PostgreSQL beforehand. The name is up to the user):
-```sh
-psql -U postgres -d vdj_t < /path/to/vdj_t.sql
-```
-
-Then, in R, specify database connection information (example settings; modify accordingly):
+First, specify database connection information and a desired database name:
 ```r
 dbname = "vdj_t"
 port = 5432
@@ -26,10 +21,23 @@ user = "postgres"
 password <- .rs.askForPassword("Database Password:")
 ```
 
-Load data into the database (sname represent a sample name):
+Then, create an empty database and set up all tables to store the data:
 ```r
 library(cellrangerVDJdb)
 
+create_database(user = user, 
+                dbname = dbname, 
+                password = password,
+                psql_path = psql_path)
+
+create_tables(user = user, 
+                dbname = dbname, 
+                password = password,
+                psql_path = psql_path)
+```
+
+Load data into the database (sname represent a sample name):
+```r
 load_from_cellranger_vdj_t(
     sname = sname, 
     resultsdir = "/path/to/10x/results/",
