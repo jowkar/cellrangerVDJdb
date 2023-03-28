@@ -7,6 +7,8 @@ Database and R interface to load and query assembled VDJ sequences from CellRang
 - consensus_annotations.csv
 - filtered_contig_annotations.csv
 
+An ER diagram describing the created database structure can be found here: [ER diagram](images/ERD.pdf)
+
 # Usage
 
 It is a requirement that PostgreSQL is already setup and running and that an empty database has been setup. 
