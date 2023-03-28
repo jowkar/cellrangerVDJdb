@@ -1,7 +1,3 @@
-#library(RODBC)
-#library(odbc)
-#library(RPostgres)
-
 #' @import RODBC
 #' @import odbc
 
