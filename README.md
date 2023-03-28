@@ -36,6 +36,11 @@ create_tables(user = user,
                 psql_path = psql_path)
 ```
 
+Test connecting to the database from R:
+```r
+test_connection(dbname, port, user, password)
+```
+
 Load data into the database (sname represent a sample name):
 ```r
 load_from_cellranger_vdj_t(
@@ -49,11 +54,6 @@ load_from_cellranger_vdj_t(
     user = user, 
     password = password, 
     psql_path = "/Library/PostgreSQL/15/bin/psql")
-```
-
-Test connecting to the database from R:
-```r
-test_connection(dbname, port, user, password)
 ```
 
 Connect and run a query:
