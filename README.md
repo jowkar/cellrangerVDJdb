@@ -1,5 +1,5 @@
 # cellrangerVDJdb
-Database and R interface to load and query assembled VDJ sequences from CellRanger. Currently supports loading data from CellRanger multi output for T cell receptors, expecting the output to be in a directory named as "multi/\_\_s\_\_/outs/per_sample_outs/\_\_s\_\_/vdj_t/", where \_\_s\_\_ represents a sample name. Other directory structures may be specified, and would work as long as the correct files are to be found there. The expected CellRanger output files are:
+Database and R interface to load and query assembled VDJ sequences from [CellRanger](https://support.10xgenomics.com/single-cell-vdj/software/pipelines/latest/output/per-sample-outs-multi). Currently supports loading data from CellRanger multi output for T cell receptors, expecting the output to be in a directory named as "multi/\_\_s\_\_/outs/per_sample_outs/\_\_s\_\_/vdj_t/", where \_\_s\_\_ represents a sample name. Other directory structures may be specified, and would work as long as the correct files are to be found there. The expected CellRanger output files are:
 
 - airr_rearrangement.tsv
 - cell_barcodes.json
