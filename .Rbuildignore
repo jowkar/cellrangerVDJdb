@@ -1,4 +1,3 @@
-testing.sql
-testing.R
+images
 ^.*\.Rproj$
 ^\.Rproj\.user$
