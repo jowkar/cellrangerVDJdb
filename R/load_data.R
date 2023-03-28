@@ -1,4 +1,5 @@
-.read_load_data_template <- function(fname = "inst/sql/load_data_template.sql"){
+.read_load_data_template <- function(fname = system.file("sql", "load_data_template.sql", package="cellrangerVDJdb")){
+  
   load_data_template <- readLines(fname, warn = F)
   names(load_data_template) <- stringr::str_split_fixed(
     stringr::str_split_fixed(load_data_template," ",3)[,2],"\\(",2)[,1]
@@ -71,4 +72,19 @@ load_from_cellranger_vdj_t <- function(sname,
                                                  cellranger_dir_structure, 
                                                  outdir)
   .load_data_to_db(loading_command_file, dbname, user, password, psql_path)
+}
+
+#' @export
+create_database <- function(user, dbname = "vdj_t", password, psql_path){
+  command <- paste0("PGPASSWORD=", password, " ", psql_path, " -U ",user,
+                    " -c 'CREATE DATABASE ",dbname,";'")
+  system(command)
+}
+
+#' @export
+create_tables <- function(table_definitions_file = system.file("sql", "vdj_t.sql", package = "cellrangerVDJdb"), 
+                          dbname, user, password, psql_path = "/Library/PostgreSQL/15/bin/psql"){
+  command <- paste0("PGPASSWORD=", password, " ", psql_path, " -U ", user, 
+                    " -d ", dbname, " < ", table_definitions_file)
+  system(command)
 }
