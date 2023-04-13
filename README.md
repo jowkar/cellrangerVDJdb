@@ -41,7 +41,7 @@ Test connecting to the database from R:
 test_connection(dbname, port, user, password)
 ```
 
-Load data into the database (sname represent a sample name):
+Load data into the database (here, "sname" represents a sample name):
 ```r
 load_from_cellranger_vdj_t(
     sname = sname, 
